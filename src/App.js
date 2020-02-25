@@ -8,8 +8,9 @@ import './App.css';
 class App extends Component {
   state = {
     users: [],
-    loading: false
-  }
+    loading: false,
+    alert: null
+  };
 
   searchUsers = async text => {
     this.setState( { loading: true } );
@@ -21,18 +22,27 @@ class App extends Component {
     this.setState( { users: res.data.items, loading: false } );
   };
 
-  //console.log( res.data );
+  //clear users from state
+  clearUsers = () => this.setState( { users: [], loading: false } );
 
-
+  //set Alert
+  setAlert = ( msg, type ) => {
+    this.setAlert( { alert: { msg: msg, type: type } } );
+  };
 
   render() {
+    const { loading, users } = this.state;
     return (
       <div className='App'>
 
         <Navbar />
         <div className='container'>
-          <Search searchUsers={ this.searchUsers } />
-          <Users loading={ this.state.loading } users={ this.state.users } />
+          <Search
+            searchUsers={ this.searchUsers }
+            clearUsers={ this.clearUsers }
+            showClear={ users.length > 0 ? true : false }
+            setAlert={ this.setAlert } />
+          <Users loading={ loading } users={ users } />
         </div>
       </div>
 
